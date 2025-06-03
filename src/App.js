@@ -40,8 +40,7 @@ function App() {
     }
 
     try {
-      const backendApiUrl = 'https://your-backend-name.onrender.com/api/generate-evaluations'; // REMEMBER TO REPLACE WITH YOUR ACTUAL RENDER BACKEND URL
-
+      const backendApiUrl = 'https://teacher-assistant-backend.onrender.com'; 
       const response = await fetch(backendApiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
