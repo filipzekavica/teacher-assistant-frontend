@@ -68,16 +68,41 @@ function App() {
     }
   };
 
+  // Function to parse messy file names and extract clean titles
+  const parseFileName = (input) => {
+    if (!input.trim()) return '';
+    
+    // Remove common file patterns and extensions
+    let cleaned = input
+      .replace(/Preparation files[）)]/g, '')
+      .replace(/G\d+-\d+-\d+-\d+/g, '') // Remove grade patterns like G4-1-3-2
+      .replace(/\.(mp3|mp4|pdf|wav|avi|mov)/gi, '') // Remove file extensions
+      .replace(/mp3Conversion complete\d+\.\d+MB/gi, '') // Remove conversion text
+      .replace(/mp4Conversion complete\d+\.\d+MB/gi, '')
+      .replace(/pdfPreview/gi, '')
+      .replace(/Preview/gi, '')
+      .replace(/（/g, '') // Remove special parentheses
+      .replace(/\d+$/g, '') // Remove trailing numbers
+      .replace(/[-_.]/g, ' ') // Replace dashes, dots, underscores with spaces
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+    
+    // Apply title case
+    return toTitleCase(cleaned);
+  };
+
   // Function to copy the entire output to clipboard
   const handleCopyAll = () => {
     // Include song name first if it exists, then story and cartoon
     const songPart = songName ? `Song: ${songName}\n  ` : '';
 
     const fullOutput = `Today's class:
+
   ${songPart}Story: ${storyName}
   Cartoon: ${cartoonName}
 
 Class performance:
+
 ${evaluations}
 
 Today's homework:
@@ -117,6 +142,13 @@ ${FIXED_HOMEWORK}`;
               onChange={(e) => setSongName(toTitleCase(e.target.value))}
               placeholder="e.g., Twinkle, Twinkle Little Star"
             />
+            <button
+              type="button"
+              onClick={() => setSongName(parseFileName(songName))}
+              className="mt-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded transition-colors"
+            >
+              🧹 Clean Song Name
+            </button>
           </div>
 
           <div>
@@ -131,6 +163,13 @@ ${FIXED_HOMEWORK}`;
               onChange={(e) => setStoryName(toTitleCase(e.target.value))}
               placeholder="e.g., The Little Red Hen"
             />
+            <button
+              type="button"
+              onClick={() => setStoryName(parseFileName(storyName))}
+              className="mt-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded transition-colors"
+            >
+              🧹 Clean Story Name
+            </button>
           </div>
 
           <div>
@@ -145,6 +184,13 @@ ${FIXED_HOMEWORK}`;
               onChange={(e) => setCartoonName(toTitleCase(e.target.value))}
               placeholder="e.g., Tom and Jerry"
             />
+            <button
+              type="button"
+              onClick={() => setCartoonName(parseFileName(cartoonName))}
+              className="mt-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded transition-colors"
+            >
+              🧹 Clean Cartoon Name
+            </button>
           </div>
 
           <div>
