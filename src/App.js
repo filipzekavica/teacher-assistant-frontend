@@ -70,12 +70,12 @@ function App() {
 
   // Function to copy the entire output to clipboard
   const handleCopyAll = () => {
-    // Include song name in the output if it exists
-    const songPart = songName ? `\nSong: ${songName}` : '';
+    // Include song name first if it exists, then story and cartoon
+    const songPart = songName ? `Song: ${songName}\n  ` : '';
 
     const fullOutput = `Today's class:
-  Story: ${storyName}
-  Cartoon: ${cartoonName}${songPart}
+  ${songPart}Story: ${storyName}
+  Cartoon: ${cartoonName}
 
 Class performance:
 ${evaluations}
@@ -104,6 +104,21 @@ ${FIXED_HOMEWORK}`;
         </h1>
 
         <div className="space-y-6 mb-8">
+          {/* Song Name Input - Now First */}
+          <div>
+            <label htmlFor="songName" className="block text-lg font-semibold text-gray-700 mb-2">
+              Song Name (Optional):
+            </label>
+            <input
+              type="text"
+              id="songName"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+              value={songName}
+              onChange={(e) => setSongName(toTitleCase(e.target.value))}
+              placeholder="e.g., Twinkle, Twinkle Little Star"
+            />
+          </div>
+
           <div>
             <label htmlFor="storyName" className="block text-lg font-semibold text-gray-700 mb-2">
               Story Name:
@@ -129,21 +144,6 @@ ${FIXED_HOMEWORK}`;
               value={cartoonName}
               onChange={(e) => setCartoonName(toTitleCase(e.target.value))}
               placeholder="e.g., Tom and Jerry"
-            />
-          </div>
-
-          {/* New Optional Song Name Input */}
-          <div>
-            <label htmlFor="songName" className="block text-lg font-semibold text-gray-700 mb-2">
-              Song Name (Optional):
-            </label>
-            <input
-              type="text"
-              id="songName"
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800"
-              value={songName}
-              onChange={(e) => setSongName(toTitleCase(e.target.value))}
-              placeholder="e.g., Twinkle, Twinkle Little Star"
             />
           </div>
 
@@ -191,11 +191,12 @@ ${FIXED_HOMEWORK}`;
             </h2>
 
             <div className="mb-6">
+              {/* Display song first if it exists */}
+              {songName && (
+                <p className="text-lg text-gray-700 mb-2"><strong className="text-blue-800">Song:</strong> {songName}</p>
+              )}
               <p className="text-lg text-gray-700 mb-2"><strong className="text-blue-800">Story:</strong> {storyName}</p>
               <p className="text-lg text-gray-700"><strong className="text-blue-800">Cartoon:</strong> {cartoonName}</p>
-              {songName && ( // Only display if songName is provided
-                <p className="text-lg text-gray-700"><strong className="text-blue-800">Song:</strong> {songName}</p>
-              )}
             </div>
 
             <h3 className="text-xl sm:text-2xl font-bold text-blue-700 mb-4">Class Performance:</h3>
