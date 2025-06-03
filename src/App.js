@@ -43,7 +43,7 @@ function App() {
       // This URL will be your backend server's address.
       // During local development, it might be 'http://localhost:5000/api/generate-evaluations'
       // After deployment, it will be your deployed backend URL.
-      const backendApiUrl = '/api/generate-evaluations'; // Relative path for deployment flexibility
+      const backendApiUrl = 'https://teacher-assistant-backend.onrender.com/api/generate-evaluations';
 
       const response = await fetch(backendApiUrl, {
         method: 'POST',
