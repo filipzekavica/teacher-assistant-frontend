@@ -40,7 +40,7 @@ function App() {
     }
 
     try {
-      const backendApiUrl = 'https://teacher-assistant-backend.onrender.com'; 
+      const backendApiUrl = 'https://teacher-assistant-backend.onrender.com/api/generate-evaluations'; 
       const response = await fetch(backendApiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
