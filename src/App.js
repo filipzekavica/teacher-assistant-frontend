@@ -19,6 +19,7 @@ const toTitleCase = (str) => {
 function App() {
   const [storyName, setStoryName] = useState('');
   const [cartoonName, setCartoonName] = useState('');
+  const [songName, setSongName] = useState(''); // New state for song name
   const [rawComments, setRawComments] = useState('');
   const [evaluations, setEvaluations] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,11 +40,7 @@ function App() {
     }
 
     try {
-      // --- CHANGE: Call your backend API instead of Gemini directly ---
-      // This URL will be your backend server's address.
-      // During local development, it might be 'http://localhost:5000/api/generate-evaluations'
-      // After deployment, it will be your deployed backend URL.
-      const backendApiUrl = 'https://teacher-assistant-backend.onrender.com/api/generate-evaluations';
+      const backendApiUrl = 'https://your-backend-name.onrender.com/api/generate-evaluations'; // REMEMBER TO REPLACE WITH YOUR ACTUAL RENDER BACKEND URL
 
       const response = await fetch(backendApiUrl, {
         method: 'POST',
@@ -58,7 +55,7 @@ function App() {
 
       const result = await response.json();
 
-      if (result.evaluations) { // Expecting 'evaluations' key from backend
+      if (result.evaluations) {
         setEvaluations(result.evaluations);
       } else {
         setError("Failed to generate evaluations. Unexpected response structure from backend.");
@@ -74,9 +71,12 @@ function App() {
 
   // Function to copy the entire output to clipboard
   const handleCopyAll = () => {
+    // Include song name in the output if it exists
+    const songPart = songName ? `\nSong: ${songName}` : '';
+
     const fullOutput = `Today's class:
   Story: ${storyName}
-  Cartoon: ${cartoonName}
+  Cartoon: ${cartoonName}${songPart}
 
 Class performance:
 ${evaluations}
@@ -133,6 +133,21 @@ ${FIXED_HOMEWORK}`;
             />
           </div>
 
+          {/* New Optional Song Name Input */}
+          <div>
+            <label htmlFor="songName" className="block text-lg font-semibold text-gray-700 mb-2">
+              Song Name (Optional):
+            </label>
+            <input
+              type="text"
+              id="songName"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+              value={songName}
+              onChange={(e) => setSongName(toTitleCase(e.target.value))}
+              placeholder="e.g., Twinkle, Twinkle Little Star"
+            />
+          </div>
+
           <div>
             <label htmlFor="rawComments" className="block text-lg font-semibold text-gray-700 mb-2">
               Student Comments (Name: raw comment, one per line):
@@ -179,6 +194,9 @@ ${FIXED_HOMEWORK}`;
             <div className="mb-6">
               <p className="text-lg text-gray-700 mb-2"><strong className="text-blue-800">Story:</strong> {storyName}</p>
               <p className="text-lg text-gray-700"><strong className="text-blue-800">Cartoon:</strong> {cartoonName}</p>
+              {songName && ( // Only display if songName is provided
+                <p className="text-lg text-gray-700"><strong className="text-blue-800">Song:</strong> {songName}</p>
+              )}
             </div>
 
             <h3 className="text-xl sm:text-2xl font-bold text-blue-700 mb-4">Class Performance:</h3>
