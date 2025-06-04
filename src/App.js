@@ -26,6 +26,29 @@ function App() {
   const [error, setError] = useState('');
   const [copyButtonText, setCopyButtonText] = useState('Copy All');
 
+  // Function to parse messy file names and extract clean titles
+  const parseFileName = (input) => {
+    if (!input.trim()) return '';
+    
+    // Remove common file patterns and extensions
+    let cleaned = input
+      .replace(/Preparation files[）)]/g, '')
+      .replace(/G\d+-\d+-\d+-\d+/g, '') // Remove grade patterns like G4-1-3-2
+      .replace(/\.(mp3|mp4|pdf|wav|avi|mov)/gi, '') // Remove file extensions
+      .replace(/mp3Conversion complete\d+\.\d+MB/gi, '') // Remove conversion text
+      .replace(/mp4Conversion complete\d+\.\d+MB/gi, '')
+      .replace(/pdfPreview/gi, '')
+      .replace(/Preview/gi, '')
+      .replace(/（/g, '') // Remove special parentheses
+      .replace(/\d+$/g, '') // Remove trailing numbers
+      .replace(/[-_.]/g, ' ') // Replace dashes, dots, underscores with spaces
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+    
+    // Apply title case
+    return toTitleCase(cleaned);
+  };
+
   // Function to call YOUR Backend for evaluations
   const generateEvaluations = async () => {
     setLoading(true);
@@ -40,6 +63,7 @@ function App() {
     }
 
     try {
+      // IMPORTANT: Replace with your actual Render backend URL
       const backendApiUrl = 'https://teacher-assistant-backend.onrender.com/api/generate-evaluations'; 
       const response = await fetch(backendApiUrl, {
         method: 'POST',
@@ -66,29 +90,6 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Function to parse messy file names and extract clean titles
-  const parseFileName = (input) => {
-    if (!input.trim()) return '';
-    
-    // Remove common file patterns and extensions
-    let cleaned = input
-      .replace(/Preparation files[）)]/g, '')
-      .replace(/G\d+-\d+-\d+-\d+/g, '') // Remove grade patterns like G4-1-3-2
-      .replace(/\.(mp3|mp4|pdf|wav|avi|mov)/gi, '') // Remove file extensions
-      .replace(/mp3Conversion complete\d+\.\d+MB/gi, '') // Remove conversion text
-      .replace(/mp4Conversion complete\d+\.\d+MB/gi, '')
-      .replace(/pdfPreview/gi, '')
-      .replace(/Preview/gi, '')
-      .replace(/（/g, '') // Remove special parentheses
-      .replace(/\d+$/g, '') // Remove trailing numbers
-      .replace(/[-_.]/g, ' ') // Replace dashes, dots, underscores with spaces
-      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-      .trim();
-    
-    // Apply title case
-    return toTitleCase(cleaned);
   };
 
   // Function to copy the entire output to clipboard
@@ -139,7 +140,7 @@ ${FIXED_HOMEWORK}`;
               id="songName"
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-800"
               value={songName}
-              onChange={(e) => setSongName(toTitleCase(e.target.value))}
+              onChange={(e) => setSongName(parseFileName(e.target.value))}
               placeholder="e.g., Twinkle, Twinkle Little Star"
             />
             <button
@@ -246,12 +247,14 @@ ${FIXED_HOMEWORK}`;
             </div>
 
             <h3 className="text-xl sm:text-2xl font-bold text-blue-700 mb-4">Class Performance:</h3>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-8 shadow-inner text-gray-800 leading-relaxed whitespace-pre-wrap">
+            {/* Removed styling for raw output */}
+            <div className="text-gray-800 leading-relaxed whitespace-pre-wrap mb-8">
               {evaluations}
             </div>
 
             <h3 className="text-xl sm:text-2xl font-bold text-blue-700 mb-4">Today's Homework:</h3>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-5 shadow-inner text-gray-800 leading-relaxed whitespace-pre-wrap">
+            {/* Removed styling for raw output */}
+            <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
               {FIXED_HOMEWORK}
             </div>
 
@@ -264,6 +267,40 @@ ${FIXED_HOMEWORK}`;
             </button>
           </div>
         )}
+      </div>
+
+      {/* NEW DONATION SECTION */}
+      <div className="bg-white rounded-xl shadow-2xl p-6 sm:p-10 w-full max-w-3xl border border-blue-200 mt-8 text-center">
+        <h2 className="text-2xl sm:text-3xl font-bold text-blue-800 mb-6">
+          Support My Work ❤️
+        </h2>
+        <p className="text-gray-700 mb-6">
+          If you find this AI Teacher Assistant helpful, please consider a small donation to support its development and maintenance!
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center items-center space-y-6 sm:space-y-0 sm:space-x-8">
+          <div className="flex flex-col items-center">
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">PayPal</h3>
+            {/* IMPORTANT: REPLACE 'YOUR_PAYPAL_QR_FILENAME.png' with the ACTUAL filename of your PayPal QR code image in the public folder */}
+            <img
+              src={`${process.env.PUBLIC_URL}/1749029635577.jpg`} 
+              alt="PayPal QR Code"
+              className="w-40 h-40 rounded-lg shadow-md border border-gray-200"
+              onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/160x160/cccccc/333333?text=PayPal+QR" }} // Fallback
+            />
+            <p className="mt-2 text-sm text-gray-600">Scan to donate via PayPal</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Alipay</h3>
+            {/* IMPORTANT: REPLACE 'YOUR_ALIPAY_QR_FILENAME.png' with the ACTUAL filename of your Alipay QR code image in the public folder */}
+            <img
+              src={`${process.env.PUBLIC_URL}/frame.png`} 
+              alt="Alipay QR Code"
+              className="w-40 h-40 rounded-lg shadow-md border border-gray-200"
+              onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/160x160/cccccc/333333?text=Alipay+QR" }} // Fallback
+            />
+            <p className="mt-2 text-sm text-gray-600">Scan to donate via Alipay</p>
+          </div>
+        </div>
       </div>
     </div>
   );
