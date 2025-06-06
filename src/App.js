@@ -280,9 +280,9 @@ ${FIXED_HOMEWORK}`;
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-6 sm:space-y-0 sm:space-x-8">
           <div className="flex flex-col items-center">
             <h3 className="text-xl font-semibold text-gray-800 mb-3">PayPal</h3>
-            {/* IMPORTANT: REPLACE 'YOUR_PAYPAL_QR_FILENAME.png' with the ACTUAL filename of your PayPal QR code image in the public folder */}
+            {/* REPLACE THE SRC WITH YOUR ACTUAL PAYPAL QR CODE IMAGE URL/PATH */}
             <img
-              src={`${process.env.PUBLIC_URL}/1749029635577.jpg`} 
+              src="/frame.png" // Example: If you put paypal_qr.png in your public folder
               alt="PayPal QR Code"
               className="w-40 h-40 rounded-lg shadow-md border border-gray-200"
               onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/160x160/cccccc/333333?text=PayPal+QR" }} // Fallback
@@ -291,9 +291,9 @@ ${FIXED_HOMEWORK}`;
           </div>
           <div className="flex flex-col items-center">
             <h3 className="text-xl font-semibold text-gray-800 mb-3">Alipay</h3>
-            {/* IMPORTANT: REPLACE 'YOUR_ALIPAY_QR_FILENAME.png' with the ACTUAL filename of your Alipay QR code image in the public folder */}
+            {/* REPLACE THE SRC WITH YOUR ACTUAL ALIPAY QR CODE IMAGE URL/PATH */}
             <img
-              src={`${process.env.PUBLIC_URL}/frame.png`} 
+              src="/1749029635577.jpg" // Example: If you put alipay_qr.png in your public folder
               alt="Alipay QR Code"
               className="w-40 h-40 rounded-lg shadow-md border border-gray-200"
               onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/160x160/cccccc/333333?text=Alipay+QR" }} // Fallback
